@@ -1,63 +1,73 @@
 package com.example.myweather.data.repository
 
-import com.example.myweather.data.model.IpInfoDTO
-import com.example.myweather.data.model.WeatherDTO
+import com.example.myweather.data.mapper.toCurrentWeatherModel
+import com.example.myweather.data.mapper.toHourlyWeather
+import com.example.myweather.data.mapper.toWeekWeatherModel
+import com.example.myweather.data.model.CurrentWeatherDTO
+import com.example.myweather.data.model.HourlyWeatherDTO
+import com.example.myweather.data.model.WeekWeatherDTO
 import com.example.myweather.data.utils.tryToExecute
+import com.example.myweather.domain.model.entity.HourlyWeatherModel
 import com.example.myweather.domain.model.entity.Location
-import com.example.myweather.domain.model.entity.Weather
+import com.example.myweather.domain.model.entity.CurrentWeatherModel
+import com.example.myweather.domain.model.entity.WeekWeatherModel
 import com.example.myweather.domain.repository.WeatherRepository
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
+import io.ktor.client.engine.cio.CIO
 import io.ktor.client.request.get
-import org.example.data.mapper.toLocation
-import org.example.data.mapper.toWeather
+import io.ktor.client.statement.bodyAsText
+import kotlinx.serialization.json.Json
 
 
 class WeatherRepositoryImp(private val httpClient: HttpClient) : WeatherRepository {
-    override suspend fun getLocationCurrentWeather(location: Location): Weather {
+    override suspend fun getLocationCurrentWeather(location: Location): CurrentWeatherModel {
         return tryToExecute(
-            {
-                val url =
-                    "$OPEN_METEO_URL?latitude=${location.latitude}&longitude=${location.longitude}&current_weather=true"
-                val response = httpClient.get(url)
-                val weatherDTO = response.body<WeatherDTO>()
-                weatherDTO
+            function = {
+                val client = HttpClient(CIO)
+                val response =
+                    client.get("https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,rain,weather_code,surface_pressure,wind_speed_10m&timezone=auto")
+                        .bodyAsText()
+                val weather = Json.decodeFromString<CurrentWeatherDTO>(response)
+                weather
             },
             onSuccess = { weather -> weather },
-            onFailure = { exception -> throw exception }).toWeather()
+            onFailure = { exception: Exception -> throw exception },
+
+            ).toCurrentWeatherModel()
     }
 
-    override suspend fun getCurrentWeather(): Weather {
+
+    override suspend fun getHourlyWeather(location: Location): HourlyWeatherModel {
         return tryToExecute(
-            {
-                val location = getLocation()
-                val url =
-                    "$OPEN_METEO_URL?latitude=${location.latitude}&longitude=${location.longitude}&current_weather=true"
-                val response = httpClient.get(url)
-                val weatherDTO = response.body<WeatherDTO>()
-                weatherDTO
+            function = {
+                val client = HttpClient(CIO)
+                val response =
+                    client.get("https://api.open-meteo.com/v1/forecast?latitude=${location.latitude}&longitude=${location.longitude}&hourly=weather_code,temperature_2m,is_day&forecast_days=1")
+                        .bodyAsText()
+                val weather = Json.decodeFromString<HourlyWeatherDTO>(response)
+                weather
             },
             onSuccess = { weather -> weather },
-            onFailure = { exception -> throw exception }).toWeather()
+            onFailure = { exception: Exception -> throw exception },
+
+            ).toHourlyWeather()
     }
 
-    private suspend fun getLocation(): Location {
+    override suspend fun getWeekWeather(location: Location): WeekWeatherModel {
         return tryToExecute(
-            {
-                val ipResponse = httpClient.get(IPIFY_URL).body<String>()
-                val url =
-                    "$IPI_API_URL$ipResponse?fields=status,country,regionName,city,lat,lon,timezone"
-                val response = httpClient.get(url)
-                val ipInfoDTO = response.body<IpInfoDTO>()
-                ipInfoDTO
+            function = {
+                val client = HttpClient(CIO)
+                val response =
+                    client.get("https://api.open-meteo.com/v1/forecast?latitude=${location.latitude}&longitude=${location.longitude}&daily=weather_code,temperature_2m_max,temperature_2m_min,uv_index_max")
+                        .bodyAsText()
+                val weather = Json.decodeFromString<WeekWeatherDTO>(response)
+                weather
             },
-            onFailure = { exception -> throw exception },
-            onSuccess = { location -> location }).toLocation()
+            onSuccess = { weather -> weather },
+            onFailure = { exception: Exception -> throw exception },
+
+            ).toWeekWeatherModel()
     }
 
-    companion object {
-        private const val OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast"
-        private const val IPIFY_URL = "https://api.ipify.org"
-        private const val IPI_API_URL = "http://ip-api.com/json/"
-    }
+
 }

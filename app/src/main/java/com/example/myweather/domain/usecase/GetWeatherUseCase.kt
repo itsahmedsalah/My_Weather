@@ -5,6 +5,9 @@ import com.example.myweather.domain.repository.WeatherRepository
 
 
 class GetWeatherUseCase(private val weatherRepository: WeatherRepository) {
-     fun getLocationWeather(location: Location) = weatherRepository.getLocationCurrentWeather(location)
-     fun getWeather() = weatherRepository.getCurrentWeather()
+    suspend fun getLocationWeather(location: Location) =
+        weatherRepository.getLocationCurrentWeather(location)
+
+    suspend fun getHourlyWeather(location: Location) = weatherRepository.getHourlyWeather(location)
+    suspend fun getWeekWeather(location: Location) = weatherRepository.getWeekWeather(location)
 }

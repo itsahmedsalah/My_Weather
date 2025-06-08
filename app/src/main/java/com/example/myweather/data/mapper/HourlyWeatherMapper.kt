@@ -1,18 +1,15 @@
-package org.example.data.mapper
+package com.example.myweather.data.mapper
 
-import com.example.myweather.data.model.WeatherDTO
-import com.example.myweather.domain.model.entity.Weather
+import com.example.myweather.data.model.HourlyWeatherDTO
+import com.example.myweather.domain.model.entity.HourlyWeatherModel
 import com.example.myweather.domain.model.entity.WeatherCondition
 
-fun WeatherDTO.toWeather(): Weather {
-    val currentWeather = this.currentWeather ?: return Weather(0.0, "", WeatherCondition.UNKNOWN)
-    val temperature = currentWeather.temperature ?: 0.0
-    val weatherCode = currentWeather.weatherCode ?: -1
-    val temperatureUnit = this.currentWeatherUnits?.temperature ?: ""
-    return Weather(
-        temperature = temperature,
-        weatherCondition = mapWeatherCodeToCondition(weatherCode),
-        temperatureUnit = temperatureUnit
+fun HourlyWeatherDTO.toHourlyWeather(): HourlyWeatherModel {
+    return HourlyWeatherModel(
+        isDay = this.hourly.is_day,
+        weatherCode = this.hourly.weather_code,
+        time = this.hourly.time,
+        hourTemperature = this.hourly.temperature_2m
     )
 }
 
