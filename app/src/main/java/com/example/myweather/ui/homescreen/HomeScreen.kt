@@ -26,6 +26,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import com.example.myweather.R
 import com.example.myweather.ui.theme.MyWeatherTheme
 import com.example.myweather.ui.theme.Urbanest
+import com.example.myweather.ui.theme.lightSkyBlue
 
 class HomeScreen : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,10 +45,11 @@ class HomeScreen : ComponentActivity() {
         setContent {
             MyWeatherTheme {
                 Scaffold(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize(),
+
                     ) { innerPadding ->
-                    Greeting(
-                        name = "Android",
+                    WeatherHomeScreen(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -54,37 +58,26 @@ class HomeScreen : ComponentActivity() {
     }
 }
 
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Button(onClick = {
-
-        }) {
-            Text(
-                text = "Click Me!",
-
-                )
-        }
-        Image(
-            painter = painterResource(R.drawable.ic_launcher_background),
-            contentDescription = null,
-            modifier = Modifier.padding(top = 20.dp)
-        )
-
-    }
-}
-
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun GreetingPreview() {
-    MyWeatherTheme {
-        Greeting("Ahmed")
+fun WeatherHomeScreen(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(
+                        lightSkyBlue,
+                        Color.White
+                    )
+                )
+            )
+    ) {
+
     }
 }
 
+@Composable
+fun LocationView(modifier: Modifier = Modifier) {
+    
+}
