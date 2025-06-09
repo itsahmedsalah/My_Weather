@@ -69,5 +69,11 @@ dependencies {
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.ktor.client.logging)
 
+    implementation("io.insert-koin:koin-core:4.0.3")
+
+    implementation(libs.play.services.location)
+
+    implementation("com.google.accompanist:accompanist-permissions:0.34.0") // Use the latest stable version
+
 
 }

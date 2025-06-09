@@ -23,9 +23,9 @@ class WeatherRepositoryImp(private val httpClient: HttpClient) : WeatherReposito
     override suspend fun getLocationCurrentWeather(location: Location): CurrentWeatherModel {
         return tryToExecute(
             function = {
-                val client = HttpClient(CIO)
+
                 val response =
-                    client.get("https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,rain,weather_code,surface_pressure,wind_speed_10m&timezone=auto")
+                    httpClient.get("https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,rain,weather_code,surface_pressure,wind_speed_10m&timezone=auto")
                         .bodyAsText()
                 val weather = Json.decodeFromString<CurrentWeatherDTO>(response)
                 weather
@@ -40,9 +40,9 @@ class WeatherRepositoryImp(private val httpClient: HttpClient) : WeatherReposito
     override suspend fun getHourlyWeather(location: Location): HourlyWeatherModel {
         return tryToExecute(
             function = {
-                val client = HttpClient(CIO)
+
                 val response =
-                    client.get("https://api.open-meteo.com/v1/forecast?latitude=${location.latitude}&longitude=${location.longitude}&hourly=weather_code,temperature_2m,is_day&forecast_days=1")
+                    httpClient.get("https://api.open-meteo.com/v1/forecast?latitude=${location.latitude}&longitude=${location.longitude}&hourly=weather_code,temperature_2m,is_day&forecast_days=1")
                         .bodyAsText()
                 val weather = Json.decodeFromString<HourlyWeatherDTO>(response)
                 weather
@@ -56,9 +56,8 @@ class WeatherRepositoryImp(private val httpClient: HttpClient) : WeatherReposito
     override suspend fun getWeekWeather(location: Location): WeekWeatherModel {
         return tryToExecute(
             function = {
-                val client = HttpClient(CIO)
                 val response =
-                    client.get("https://api.open-meteo.com/v1/forecast?latitude=${location.latitude}&longitude=${location.longitude}&daily=weather_code,temperature_2m_max,temperature_2m_min,uv_index_max")
+                    httpClient.get("https://api.open-meteo.com/v1/forecast?latitude=${location.latitude}&longitude=${location.longitude}&daily=weather_code,temperature_2m_max,temperature_2m_min,uv_index_max")
                         .bodyAsText()
                 val weather = Json.decodeFromString<WeekWeatherDTO>(response)
                 weather
