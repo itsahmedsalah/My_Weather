@@ -3,7 +3,7 @@ package com.example.myweather.data.mapper
 import com.example.myweather.data.model.CurrentWeatherDTO
 import com.example.myweather.domain.model.entity.CurrentWeatherModel
 
-fun CurrentWeatherDTO.toCurrentWeatherModel(): CurrentWeatherModel {
+fun CurrentWeatherDTO.toCurrentWeatherModel(cityName: String?): CurrentWeatherModel {
     return CurrentWeatherModel(
         isDay = this.current.is_day != 0,
         temperature = this.current.temperature_2m.toInt(),
@@ -15,7 +15,7 @@ fun CurrentWeatherDTO.toCurrentWeatherModel(): CurrentWeatherModel {
         weatherCode = this.current.weather_code,
         rain = this.current.rain,
         uvIndex = this.current.wind_speed_10m,
-        timeZone = this.timezone,
+        cityName = cityName.toString(),
         weatherCondition = mapWeatherCodeToCondition(this.current.weather_code)
     )
 }

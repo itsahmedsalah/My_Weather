@@ -1,7 +1,6 @@
 package com.example.myweather.data.repository
 
-import android.os.Build
-import androidx.annotation.RequiresApi
+
 import com.example.myweather.data.mapper.toCurrentWeatherModel
 import com.example.myweather.data.mapper.toHourlyWeather
 import com.example.myweather.data.mapper.toDailyWeatherModels
@@ -26,7 +25,7 @@ class WeatherRepositoryImp(private val httpClient: HttpClient) : WeatherReposito
             function = {
 
                 val response =
-                    httpClient.get("https://api.open-meteo.com/v1/forecast?latitude=30.04&longitude=31.23&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,rain,weather_code,surface_pressure,wind_speed_10m&timezone=auto")
+                    httpClient.get("https://api.open-meteo.com/v1/forecast?latitude=${location.latitude}&longitude=${location.longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,rain,weather_code,surface_pressure,wind_speed_10m&timezone=auto")
                         .bodyAsText()
                 val weather = Json.decodeFromString<CurrentWeatherDTO>(response)
                 weather
@@ -34,7 +33,7 @@ class WeatherRepositoryImp(private val httpClient: HttpClient) : WeatherReposito
             onSuccess = { weather -> weather },
             onFailure = { exception: Exception -> throw exception },
 
-            ).toCurrentWeatherModel()
+            ).toCurrentWeatherModel(location.cityName)
     }
 
 
@@ -43,7 +42,7 @@ class WeatherRepositoryImp(private val httpClient: HttpClient) : WeatherReposito
             function = {
 
                 val response =
-                    httpClient.get("https://api.open-meteo.com/v1/forecast?latitude=30.04&longitude=31.23&hourly=weather_code,temperature_2m,is_day&forecast_days=1")
+                    httpClient.get("https://api.open-meteo.com/v1/forecast?latitude=${location.latitude}&longitude=${location.longitude}&hourly=weather_code,temperature_2m,is_day&forecast_days=1")
                         .bodyAsText()
                 val weather = Json.decodeFromString<HourlyWeatherDTO>(response)
                 weather
@@ -58,7 +57,7 @@ class WeatherRepositoryImp(private val httpClient: HttpClient) : WeatherReposito
         return tryToExecute(
             function = {
                 val response =
-                    httpClient.get("https://api.open-meteo.com/v1/forecast?latitude=30.04&longitude=31.23&daily=weather_code,temperature_2m_max,temperature_2m_min,uv_index_max")
+                    httpClient.get("https://api.open-meteo.com/v1/forecast?latitude=${location.latitude}&longitude=${location.longitude}&daily=weather_code,temperature_2m_max,temperature_2m_min,uv_index_max")
                         .bodyAsText()
                 val weather = Json.decodeFromString<DailyWeatherDTO>(response)
                 weather
@@ -68,6 +67,4 @@ class WeatherRepositoryImp(private val httpClient: HttpClient) : WeatherReposito
 
             ).toDailyWeatherModels()
     }
-
-
 }

@@ -17,13 +17,6 @@ class HomeScreenViewModel(private val getWeatherUseCase: GetWeatherUseCase) : Vi
     private val _currentWeather = MutableStateFlow<CurrentWeatherModel?>(null)
     val currentWeather = _currentWeather.asStateFlow()
 
-    init {
-        viewModelScope.launch {
-            getDailyWeather()
-            getHourlyWeather()
-            getCurrentWeather()
-        }
-    }
 
     private val _dailyWeather = MutableStateFlow<List<DailyWeatherModel>>(emptyList())
     val dailyWeather = _dailyWeather.asStateFlow()
@@ -31,18 +24,33 @@ class HomeScreenViewModel(private val getWeatherUseCase: GetWeatherUseCase) : Vi
     private val _hourlyWeather = MutableStateFlow<List<HourlyWeatherModel>>(emptyList())
     val hourlyWeather = _hourlyWeather.asStateFlow()
 
+    private val _loading = MutableStateFlow(true)
+    val loading = _loading.asStateFlow()
+
+    fun onPermissionGranted() {
+        viewModelScope.launch {
+            _loading.value = true
+            getDailyWeather()
+            getHourlyWeather()
+            getCurrentWeather()
+            _loading.value = false
+        }
+    }
+
     suspend fun getCurrentWeather() {
-        _currentWeather.update { getWeatherUseCase.getLocationWeather(Location(31.23, 30.04)) }
+
+        _currentWeather.update { getWeatherUseCase.getLocationWeather() }
+
     }
 
     suspend fun getDailyWeather() {
         _dailyWeather.update {
-            getWeatherUseCase.getDailyWeather(Location(31.23, 30.04))
+            getWeatherUseCase.getDailyWeather()
         }
     }
 
     suspend fun getHourlyWeather() {
-        _hourlyWeather.update { getWeatherUseCase.getHourlyWeather(Location(31.23, 30.04)) }
+        _hourlyWeather.update { getWeatherUseCase.getHourlyWeather() }
     }
 
 }

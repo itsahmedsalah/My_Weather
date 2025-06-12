@@ -13,7 +13,7 @@ data class CurrentWeatherModel(
     val weatherCode: Int,
     val rain: Double,
     val uvIndex: Double,
-    val timeZone: String,
+    val cityName: String,
     val weatherCondition: WeatherCondition
 )
 
