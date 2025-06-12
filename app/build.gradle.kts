@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.myweather"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -69,11 +69,17 @@ dependencies {
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.ktor.client.logging)
 
-    implementation("io.insert-koin:koin-core:4.0.3")
+
+    implementation("io.insert-koin:koin-androidx-compose:4.1.0")
+
 
     implementation(libs.play.services.location)
 
     implementation("com.google.accompanist:accompanist-permissions:0.34.0") // Use the latest stable version
+
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+
+
 
 
 }
