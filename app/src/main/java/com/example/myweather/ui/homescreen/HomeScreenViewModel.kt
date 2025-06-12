@@ -1,6 +1,7 @@
 package com.example.myweather.ui.homescreen
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.myweather.domain.model.entity.CurrentWeatherModel
 import com.example.myweather.domain.model.entity.DailyWeatherModel
 import com.example.myweather.domain.model.entity.HourlyWeatherModel
@@ -9,11 +10,20 @@ import com.example.myweather.domain.usecase.GetWeatherUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class HomeScreenViewModel(private val getWeatherUseCase: GetWeatherUseCase) : ViewModel() {
 
     private val _currentWeather = MutableStateFlow<CurrentWeatherModel?>(null)
     val currentWeather = _currentWeather.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            getDailyWeather()
+            getHourlyWeather()
+            getCurrentWeather()
+        }
+    }
 
     private val _dailyWeather = MutableStateFlow<List<DailyWeatherModel>>(emptyList())
     val dailyWeather = _dailyWeather.asStateFlow()
@@ -26,7 +36,9 @@ class HomeScreenViewModel(private val getWeatherUseCase: GetWeatherUseCase) : Vi
     }
 
     suspend fun getDailyWeather() {
-        _dailyWeather.update { getWeatherUseCase.getDailyWeather(Location(31.23, 30.04)) }
+        _dailyWeather.update {
+            getWeatherUseCase.getDailyWeather(Location(31.23, 30.04))
+        }
     }
 
     suspend fun getHourlyWeather() {

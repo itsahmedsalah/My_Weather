@@ -79,6 +79,11 @@ dependencies {
 
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
+    // coroutine
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+
 
 
 

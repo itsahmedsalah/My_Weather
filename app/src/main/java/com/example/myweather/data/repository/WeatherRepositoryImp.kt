@@ -38,7 +38,6 @@ class WeatherRepositoryImp(private val httpClient: HttpClient) : WeatherReposito
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun getHourlyWeather(location: Location): List<HourlyWeatherModel> {
         return tryToExecute(
             function = {
@@ -55,7 +54,6 @@ class WeatherRepositoryImp(private val httpClient: HttpClient) : WeatherReposito
             ).toHourlyWeather()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun getDailyWeather(location: Location): List<DailyWeatherModel> {
         return tryToExecute(
             function = {
