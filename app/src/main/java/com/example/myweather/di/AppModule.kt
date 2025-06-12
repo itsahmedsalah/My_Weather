@@ -6,5 +6,6 @@ val AppModules = module {
     includes(
         remoteModule,
         domainModule,
-        )
+        viewModelModule,
+    )
 }

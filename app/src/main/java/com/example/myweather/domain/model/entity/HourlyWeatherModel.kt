@@ -1,8 +1,12 @@
 package com.example.myweather.domain.model.entity
 
+import com.example.myweather.domain.model.enums.WeatherCondition
+import java.time.LocalDateTime
+
 data class HourlyWeatherModel(
-    val isDay: List<Int>,
-    val hourTemperature: List<Double>,
-    val time: List<String>,
-    val weatherCode: List<Int>,
+    val isDay: Boolean,
+    val hourTemperature: Double,
+    val time: LocalDateTime,
+    val weatherCode: Int,
+    val weatherCondition: WeatherCondition
 )

@@ -13,8 +13,26 @@ val Pink40 = Color(0xFF7D5260)
 
 val lightSkyBlue = Color(0xFF87CEFA)
 val bluePurple = Color(0xFF060414)
+val secondaryBluePurple = Color(0xFF0D0C19)
+val grayOnSecondary = Color(0x99060414)
 
-val lightBackGroundGrid = Brush.verticalGradient(
-    0.0f to lightSkyBlue,
-    1.0f to Color.White
+val lightGrayOnSecondary = Color(0x14FFFFFF)
+
+val darkThemeBorder = Color(0x14B7B7B7)
+
+val lightThemeBorder = Color(0x33838383)
+val onBackGroundDark = Color(0xB3060414)
+
+val locationLight = Color(0xFF323232)
+
+val lightWhiteSecondary = Color(0x99FFFFFF)
+
+
+val lightBackGround = Brush.verticalGradient(
+    colors = listOf(
+        lightSkyBlue, Color.White
+    )
+)
+val darkBackGround = Brush.verticalGradient(
+    listOf(bluePurple, secondaryBluePurple)
 )
