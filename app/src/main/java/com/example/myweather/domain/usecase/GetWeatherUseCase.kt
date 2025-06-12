@@ -9,5 +9,6 @@ class GetWeatherUseCase(private val weatherRepository: WeatherRepository) {
         weatherRepository.getLocationCurrentWeather(location)
 
     suspend fun getHourlyWeather(location: Location) = weatherRepository.getHourlyWeather(location)
-    suspend fun getWeekWeather(location: Location) = weatherRepository.getWeekWeather(location)
+
+    suspend fun getDailyWeather(location: Location) = weatherRepository.getDailyWeather(location)
 }
